@@ -2,6 +2,7 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import { errorMiddleware } from "./middlewares/error.middlewares.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,4 +18,9 @@ app.use(cookieParser());
 
 
 
+app.use((req, res, next) => {
+  next(new ApiError(404, "Page not found!"));
+});
+
+app.use(errorMiddleware); 
 export {app};
