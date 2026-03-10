@@ -58,6 +58,8 @@ const signup = asyncHandler( async(req, res)=>{
      if(!user){
     throw new ApiError(500, "User creation failed!");
 }
+
+
     const token =user.generateAccessToken();
 
     if(!token){
@@ -68,7 +70,7 @@ const signup = asyncHandler( async(req, res)=>{
       secure:true,
       expires:new Date(Date.now()+7*24*60*60*1000)
     }
-
+       req.flash("success", "Account created successfully!");
     return res
     .cookie("token",token,options)
     .redirect("/home");
@@ -119,7 +121,7 @@ const login = asyncHandler(async(req,res)=>{
       secure:true,
       expires:new Date(Date.now()+7*24*60*60*1000)
     }
-
+req.flash("success", "Login successfully")
     return res
     .cookie("token",token,options)
     .redirect("/home");
