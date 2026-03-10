@@ -23,12 +23,14 @@ const signup = asyncHandler( async(req, res)=>{
         [fullName,email,password].some((field)=>{
         return field?.trim()==="";
      })){
-        throw new ApiError(400,"All Fields are required");
+        req.flash("error","All fields required");
+        return res.redirect("/signup");
      }
 
      const existUser = await User.findOne({email});
      if(existUser){
-        throw new ApiError(400, "user with email aleady exists");
+       req.flash("error","User already exists");
+       return res.redirect("/signup");
      }
 
      let avatarLocalPath;
@@ -87,20 +89,24 @@ const login = asyncHandler(async(req,res)=>{
    const {email,password} = req.body;
 
    if(!email){
-      throw new ApiError(400,"email is required")
+      req.flash("error","email is required");
+      return res.redirect("/login");
    }
    if(!password){
-    throw new ApiError(400, "password is required");
+    req.flash("error","password is required");
+    return res.redirect("/login");
    }
    const user = await User.findOne({email});
    if(!user){
-      throw new ApiError(404,"user does not exist");
+      req.flash("error","user does not exist");
+      return res.redirect("/login");
    }
 
    const isPasswordValid = await user.isPasswordCorrect(password);
 
    if(!isPasswordValid){
-      throw new ApiError(401,"password incorrect")
+      req.flash("error","password incorrect");
+      return res.redirect("/login");
    }
 
    const token = user.generateAccessToken();
