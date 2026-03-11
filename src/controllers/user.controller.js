@@ -33,10 +33,10 @@ const signup = asyncHandler( async(req, res)=>{
        return res.redirect("/user/signup");
      }
 
-     let avatarLocalPath;
-     if(req.files?.avatar?.[0]){
-        avatarLocalPath = req.files.avatar[0].path;
-     }
+    let avatarLocalPath;
+if(req.file){
+    avatarLocalPath = req.file.path;  
+}
 
 
      let avatarUrl;
@@ -96,19 +96,19 @@ const login = asyncHandler(async(req,res)=>{
    }
    if(!password){
     req.flash("error","password is required");
-    return res.redirect("/login");
+    return res.redirect("/user/login");
    }
    const user = await User.findOne({email});
    if(!user){
       req.flash("error","user does not exist");
-      return res.redirect("/login");
+      return res.redirect("/user/login");
    }
 
    const isPasswordValid = await user.isPasswordCorrect(password);
 
    if(!isPasswordValid){
       req.flash("error","password incorrect");
-      return res.redirect("/login");
+      return res.redirect("/user/login");
    }
 
    const token = user.generateAccessToken();
@@ -125,11 +125,18 @@ req.flash("success", "Login successfully")
     return res
     .cookie("token",token,options)
     .redirect("/");
-})
+});
+const logout = (req,res)=>{
+   ("success", "Logout successfully")
+   return res
+   .clearCookie("token")
+   .redirect("/");
+}
 export {
    getSignup,
    signup,
    getLogin,
-   login
+   login,
+   logout
 
 }

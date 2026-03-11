@@ -3,7 +3,8 @@ import {
     getSignup,
     signup,
     getLogin,
-    login
+    login,
+    logout
 } from "../controllers/user.controller.js";
 
 
@@ -17,5 +18,7 @@ router.route("/signup")
 router.route("/login")
       .get(getLogin)
       .post(login);
+
+router.route("/logout").get(logout);
 
 export default router;
