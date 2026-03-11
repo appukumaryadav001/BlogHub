@@ -24,13 +24,13 @@ const signup = asyncHandler( async(req, res)=>{
         return field?.trim()==="";
      })){
         req.flash("error","All fields required");
-        return res.redirect("/signup");
+        return res.redirect("/user/signup");
      }
 
      const existUser = await User.findOne({email});
      if(existUser){
        req.flash("error","User already exists");
-       return res.redirect("/signup");
+       return res.redirect("/user/signup");
      }
 
      let avatarLocalPath;
@@ -73,7 +73,7 @@ const signup = asyncHandler( async(req, res)=>{
        req.flash("success", "Account created successfully!");
     return res
     .cookie("token",token,options)
-    .redirect("/home");
+    .redirect("/");
    
 });
 
@@ -124,7 +124,7 @@ const login = asyncHandler(async(req,res)=>{
 req.flash("success", "Login successfully")
     return res
     .cookie("token",token,options)
-    .redirect("/home");
+    .redirect("/");
 })
 export {
    getSignup,

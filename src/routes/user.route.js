@@ -18,4 +18,4 @@ router.route("/login")
       .get(getLogin)
       .post(login);
 
-export {router};
+export default router;
