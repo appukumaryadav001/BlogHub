@@ -6,12 +6,13 @@ import { errorMiddleware } from "./middlewares/error.middlewares.js";
 import session from "express-session";
 import flash from "connect-flash";
 import userRouter from "./routes/user.route.js";
-
+import blogRouter from "./routes/blog.route.js";
 
 
 import { ApiError } from "./utils/apiError.utils.js";
 import { attachUser } from "./middlewares/auth.middleware.js";
 ;
+import { Blog } from "./models/blog.model.js";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,10 +39,12 @@ app.use((req,res,next)=>{
  next();
 });
 
-app.get("/", (req, res) => {
-    res.render("home.ejs", { allBlog: [] });
+app.get("/", async (req, res) => {
+    const allBlog = await Blog.find();
+    return res.render("home",{allBlog})
 });
 app.use("/user",userRouter);
+app.use("/blog",blogRouter);
 
 app.use((req, res, next) => {
   next(new ApiError(404, "Page not found!"));
